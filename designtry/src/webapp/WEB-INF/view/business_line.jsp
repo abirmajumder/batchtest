@@ -17,7 +17,10 @@
 					$scope.errors[ nm ] = "";
 				}
 				$scope.persist = function() {
-					doPost($http, $scope,'/batch/persist')
+					doPost($http, $scope,'/batch/persistBL')
+				}
+				$scope.remove = function() {
+					doPost($http, $scope,'/batch/removeBL')
 				}
 				$scope.addRecord = function() {
 					$scope.lines.push( JSON.parse( JSON.stringify(${cnfBusinessLine}) ) );
@@ -32,25 +35,18 @@
 				<div class = 'col-sm-12' >
 					<h3 >Business Lines</h3>
 				</div>
-				<div class = 'col-sm-6' >
-					<div class = 'col-sm-12' >
-						<h4 >Add/Edit</h4>
-						<input type="button" value="+"  class = 'btn btn-small btn-info' ng-click = 'addRecord()'/>
-					</div>
-					<div ng-repeat = 'x in lines' >
-						<div class = 'col-sm-12' >
-							<label for = 'businessLine' >Business Line</label>
-							<input ng-model = 'x.businessLine' name = 'businessLine' ng-pattern = '/[a-zA-Z]*/' class = 'form-control' required = 'required' />
-							<span ng-show = 'cnfBusinessLine_form.businessLine.$touched && cnfBusinessLine_form.businessLine.$invalid' >
-								<span ng-show = 'cnfBusinessLine_form.businessLine.$error.pattern' >Only Alphabets</span>
-								<span ng-show = 'cnfBusinessLine_form.businessLine.$error.required' >Enter Business Line</span>
-							</span>
-						</div>
-					</div>
-				</div>
 				<div class = 'col-sm-12' >
-					<div align = 'center' >
-						<input ng-click = 'persist()' type = 'button' value = 'Save Business Lines' class = 'btn btn-small btn-info' ng-disabled = 'cnfBusinessLine_form.businessLine.$invalid' />
+					<h4 >Add/Edit</h4>
+					<input type="button" value="+"  class = 'btn btn-small btn-info' ng-click = 'addRecord()'/>
+				</div>
+				<div ng-repeat = 'x in lines' >
+					<div class = 'col-sm-9' >
+						<input ng-model = 'x.businessLine' name = 'businessLine' class = 'form-control' required = 'required' placeholder="Subject Area"/>
+					</div>
+					<div class = 'col-sm-3' >
+						<input ng-click = 'persist(x)' type = 'button' value = 'Save' class = 'btn btn-small btn-info' />
+						<input ng-click = 'remove(x)' type = 'button' value = 'Remove' class = 'btn btn-small btn-info' />
+						<a href="configureBL?id={{x.id}}" class = 'btn btn-small btn-info' >Configure</a>
 					</div>
 				</div>
 			</div>
