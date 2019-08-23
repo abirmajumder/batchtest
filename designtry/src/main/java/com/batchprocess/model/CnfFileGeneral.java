@@ -4,16 +4,27 @@ package com.batchprocess.model ;
 import javax.persistence.Entity ;
 import javax.persistence.ManyToOne ;
 import javax.persistence.JoinColumn ;
+
 import com.batchprocess.model.CnfFieldMapping ;
+
 import javax.persistence.OneToMany ;
+
 import com.batchprocess.model.CnfQuery ;
+
 import java.util.Set ;
+
 import com.batchprocess.model.CnfBusinessLine ;
+
 import javax.persistence.Column ;
+import javax.persistence.FetchType;
 import javax.persistence.GenerationType ;
 import javax.persistence.Table ;
 import javax.persistence.GeneratedValue ;
+
 import com.common.behaviour.ModelBase ;
+import com.common.util.ObjectUtil;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Id ;
 
 @Entity
@@ -27,14 +38,14 @@ public class CnfFileGeneral implements ModelBase {
 	@ManyToOne
 	@JoinColumn ( name = "cnf_query" )
 	private CnfQuery cnfQuery ;
-	@OneToMany ( mappedBy="cnfFileGeneral" )
+	@OneToMany ( mappedBy="cnfFileGeneral" ) @JsonIgnore
 	private Set<CnfFieldMapping> cnfFieldMapping ;
 	@Column ( name = "archive_directory" , length = 500 )
 	private String archiveDirectory ;
 	@Column ( name = "in_vouge" , length = 1 )
 	private String inVouge ;
 	@JoinColumn ( name = "cnf_business_line" )
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.EAGER)
 	private CnfBusinessLine cnfBusinessLine ;
 	@Column ( name = "name" , length = 200 )
 	private String name ;
@@ -47,6 +58,13 @@ public class CnfFileGeneral implements ModelBase {
 	private String type ;
 	@Column ( name = "batch_size" )
 	private int batchSize ;
+	
+	public CnfFileGeneral() {
+	}
+
+	public CnfFileGeneral(Integer id) {
+		this.id = id;
+	}
 
 	public String getStageDirectory () {
 		return this.stageDirectory ;
@@ -119,5 +137,16 @@ public class CnfFileGeneral implements ModelBase {
 	}
 	public void setBatchSize (int batchSize) {
 		this.batchSize = batchSize ;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		return null != obj && obj instanceof CnfFileGeneral 
+					&& ObjectUtil.equalOnId(this, (CnfFileGeneral)(obj) );
+	}
+	
+	@Override
+	public int hashCode() {
+		return null != this.id ? id.hashCode() : -1;
 	}
 }

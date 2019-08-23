@@ -11,31 +11,29 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.batchprocess.model.CnfBusinessLine;
+import com.batchprocess.model.CnfFieldMapping;
 import com.batchprocess.model.CnfFileGeneral;
-import com.batchprocess.service.ICnfFileGeneralService;
+import com.batchprocess.service.ICnfFieldMappingService;
 import com.common.object.Work;
 
 @Controller
-public class CnfFileGeneralController {
-	
-	@Autowired private ICnfFileGeneralService fileService;
+public class CnfFieldMappingController {
+	@Autowired private ICnfFieldMappingService mappingService;
 	@Autowired private IModelSupport modelSupport;
 	
-	@GetMapping("getfiles")
-	public @ResponseBody List<CnfFileGeneral> getFiles( @RequestParam("fileId") Integer id ) {
-		return fileService.findByCnfBusinessLine( new CnfBusinessLine(id));
+	@GetMapping("getmappings")
+	public @ResponseBody List<CnfFieldMapping> getMappings( @RequestParam("fileId") Integer id ) {
+		return mappingService.findByCnfFileGeneral( new CnfFileGeneral(id) );
 	}
 
-	@GetMapping("newfile")
+	@GetMapping("newmapping")
 	public String newfile( @RequestParam("id") Integer id, ModelMap model ) throws Exception {
-		modelSupport.newfile(id, model);
-		return "config_file";
+		modelSupport.newMapping(id, model);
+		return "config_mapping";
 	}
 	
-	@PostMapping("persistFile")
-	public @ResponseBody Work persistFile( @RequestBody CnfFileGeneral obj ) {
-		return Work.on(obj, fileService::persist );
+	@PostMapping("persistMapping")
+	public @ResponseBody Work persistMapping( @RequestBody CnfFieldMapping obj ) {
+		return Work.on(obj, mappingService::save );
 	}
-
 }
